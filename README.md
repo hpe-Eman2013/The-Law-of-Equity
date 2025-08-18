@@ -1,5 +1,8 @@
 # 📜 The Law of Equity
 
+
+![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-red)
+
 This repository contains study and teaching materials for the project **The Law of Equity**.  
 It serves as a library of references, lecture drafts, quizzes, and course structures designed to make the principles of Equity clear, accessible, and practical.
 
