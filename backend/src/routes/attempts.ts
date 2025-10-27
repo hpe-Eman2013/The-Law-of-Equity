@@ -1,17 +1,14 @@
 ﻿import { Router } from "express";
-import jwt from "jsonwebtoken";
+// jwt is provided/handled by the shared auth util; don't import it here to avoid shadowing
 import Module from "../models/Module.js";
 import Question from "../models/Question.js";
 import Attempt from "../models/Attempt.js";
+import { requireAuth } from "../utils/auth.js"; // replace local function
+
 const r = Router();
 
-function requireAuth(req:any, res:any, next:any){
-  const auth = req.headers.authorization?.split(" ")[1];
-  if(!auth) return res.status(401).json({ok:false,error:"No token"});
-  try { req.user = jwt.verify(auth, process.env.JWT_SECRET!); next(); }
-  catch { return res.status(401).json({ok:false,error:"Invalid token"}); }
-}
-
+// use the shared `requireAuth` imported from ../utils/auth.js to avoid
+// duplicating logic and to prevent a local name collision with the import
 r.post("/:slug/submit", requireAuth, async (req:any,res) => {
   const mod = await Module.findOne({ slug: req.params.slug });
   if (!mod) return res.status(404).json({ ok:false, error:"Module not found" });
