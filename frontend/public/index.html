@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Law of Equity — Modules</title>
+  </head>
+  <body>
+    <h1>Law of Equity — Modules</h1>
+    <ul id="mods">
+      Loading…
+    </ul>
+    <script>
+      const API = import.meta.env.VITE_API_BASE;
+      fetch(API + "/modules").then(r=>r.json()).then(mods=>{
+        document.getElementById("mods").innerHTML =
+          mods.map(m=>`<li>${m.order}. ${m.title} — <code>${m.slug}</code></li>`).join("");
+      }).catch(err=>{
+        document.getElementById("mods").innerHTML = "Failed to load modules: " + err;
+      });
+    </script>
+  </body>
+</html>
