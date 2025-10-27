@@ -1,0 +1,106 @@
+{
+  "moduleSlug": "01-foundations",
+  "passMark": 0.7,
+  "questions": [
+    {
+      "type": "tf",
+      "text": "Equity arose primarily to contradict and overrule the common law in all cases.",
+      "choices": ["True", "False"],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "Which best states Equity’s core purpose in its early development?",
+      "choices": [
+        "To replace legal rights with moral rights",
+        "To supplement the common law where remedies were inadequate",
+        "To centralize royal power over Parliament",
+        "To expand criminal jurisdiction of Chancery"
+      ],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "Which maxim underlies the doctrine of laches?",
+      "choices": [
+        "Equity regards as done that which ought to be done",
+        "He who comes into equity must come with clean hands",
+        "Equity aids the vigilant, not those who slumber on their rights",
+        "Equality is equity"
+      ],
+      "correctIndex": 2,
+      "points": 1
+    },
+    {
+      "type": "tf",
+      "text": "After the Judicature Acts, equitable principles ceased to exist as distinct doctrines.",
+      "choices": ["True", "False"],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "Which remedy most clearly reflects the maxim ‘equity regards as done that which ought to be done’?",
+      "choices": [
+        "Damages",
+        "Specific performance",
+        "Punitive damages",
+        "Statutory penalty"
+      ],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "A claimant seeking equitable relief must generally show:",
+      "choices": [
+        "That legal damages are adequate",
+        "Clean hands regarding the matter in suit",
+        "A criminal violation occurred",
+        "That no contract existed"
+      ],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "tf",
+      "text": "Equity created entirely new rights unknown to the law.",
+      "choices": ["True", "False"],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "Which area is classically equitable?",
+      "choices": [
+        "Trespass damages",
+        "Specific performance of land sale",
+        "Debt on a bond",
+        "Replevin"
+      ],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "mcq",
+      "text": "‘He who seeks equity must do equity’ most directly means:",
+      "choices": [
+        "The plaintiff must be generous",
+        "The plaintiff must submit to fair conditions imposed by the court",
+        "The defendant must confess liability",
+        "Money damages will be doubled"
+      ],
+      "correctIndex": 1,
+      "points": 1
+    },
+    {
+      "type": "tf",
+      "text": "Fusion of law and equity was primarily procedural, not substantive.",
+      "choices": ["True", "False"],
+      "correctIndex": 0,
+      "points": 1
+    }
+  ]
+}
