@@ -5,6 +5,7 @@ import { connectDB } from "./db.js";
 import auth from "./routes/auth.js";
 import modules from "./routes/modules.js";
 import attempts from "./routes/attempts.js";
+import libraryRoute from "./routes/library.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.get("/api/health", (_req,res)=>res.json({ ok:true }));
 app.use("/api/auth", auth);
 app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
+app.use("/api", libraryRoute);
 
 const port = process.env.PORT || 8080;
 connectDB(process.env.MONGODB_URI!).then(()=>{
