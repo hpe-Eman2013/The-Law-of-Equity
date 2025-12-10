@@ -10,8 +10,8 @@
     <ul id="mods">
       <li>Loading…</li>
     </ul>
-
-    <script type="module">
+    <div id="root"></div>
+    <script type="module" src="../frontend/src/main.tsx">
       const API = import.meta.env.VITE_API_BASE;
       fetch(API + "/modules")
         .then((r) => {
