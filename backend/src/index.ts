@@ -9,6 +9,15 @@ import libraryRoute from "./routes/library.js";
 
 dotenv.config();
 const app = express();
+// Simple logger – this will tell us if requests even hit Express
+app.use((req, _res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+app.get("/api/ping", (_req, res) => {
+  res.json({ ok: true, pong: new Date().toISOString() });
+});
+
 app.use(cors());
 app.use(express.json());
 
