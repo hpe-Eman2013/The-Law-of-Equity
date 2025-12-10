@@ -27,7 +27,12 @@ app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
 app.use("/api", libraryRoute);
 
-const port = process.env.PORT || 8080;
-connectDB(process.env.MONGODB_URI!).then(()=>{
-  app.listen(port, ()=>console.log(`Server running on port ${port}`));
-});
+const port:number = Number(process.env.PORT) || 3000;
+connectDB(process.env.MONGODB_URI!)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("⚠️ MongoDB connection failed:", err))
+  .finally(() => {
+    app.listen(port, "127.0.0.1", () => {
+      console.log(`Server running at http://127.0.0.1:${port}`);
+    });
+  });
