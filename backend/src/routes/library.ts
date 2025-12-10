@@ -66,6 +66,7 @@ r.get("/library", async (req: Request, res: Response) => {
       return res.json(cache.payload);
     }
     const folderId = requireEnv("DRIVE_FOLDER_ID");
+    console.log("Using DRIVE_FOLDER_ID =", folderId); 
     const docs = await listPdfsByFolder(folderId);
     const payload = {
       ok: true,
