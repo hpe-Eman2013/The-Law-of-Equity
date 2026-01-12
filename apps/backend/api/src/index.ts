@@ -6,7 +6,7 @@ import auth from "./routes/auth.js";
 import modules from "./routes/modules.js";
 import attempts from "./routes/attempts.js";
 import libraryRoute from "./routes/library.js";
-import assessmentsRouter from "./routes/assessments.js"
+import assessments from "./routes/assessments.js"
 
 dotenv.config();
 const app = express();
@@ -27,7 +27,7 @@ app.use("/api/auth", auth);
 app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
 app.use("/api", libraryRoute);
-app.use("/api/modules", assessmentsRouter);
+app.use("/api/assessments", assessments);
 
 const port:number = Number(process.env.PORT) || 3000;
 connectDB(process.env.MONGODB_URI!)

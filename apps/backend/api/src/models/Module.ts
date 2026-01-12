@@ -1,12 +1,12 @@
-﻿import mongoose, { Schema, Types } from "mongoose";
+﻿import mongoose, { Schema } from "mongoose";
 
 export interface IModule {
   title: string;
   slug: string;
 
-  // Assessment settings
-  questionCount: number; // default 10
-  passPct: number;       // default 70
+  // Assessment config
+  questionCount: number;
+  passPct: number;
 }
 
 const ModuleSchema = new Schema<IModule>(
