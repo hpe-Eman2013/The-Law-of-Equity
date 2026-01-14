@@ -1,46 +1,71 @@
-﻿import { connectDB } from "./utils/db.js";
-import Module from "./models/Module.js";
-import Question from "./models/Question.js";
-import dotenv from "dotenv";
+﻿import dotenv from "dotenv";
+import mongoose from "mongoose";
+
+import { connectDB } from "./utils/db.js";
+import Module, { type IModule } from "./models/Module.js";
+
 dotenv.config();
 
-await connectDB(process.env.MONGODB_URI!);
-const mod = await Module.findOneAndUpdate(
-  { slug: "01-foundations" },
-  {
-    slug: "01-foundations",
-    title: "Foundations of Equity",
-    order: 1,
-    readingLinks: [
-      "/lectures/01-foundations/index.html",
-      "https://github.com/hpe-Eman2013/The-Law-of-Equity/blob/main/reference-library/Equity-Files-OCR/A-Collection-Of-Legal-Maxims-In-Law-And-Equity-1880_ocred.pdf",
-    ],
-  },
-  { upsert: true, new: true }
-);
-await Question.deleteMany({ moduleId: mod._id });
-await Question.insertMany([
-  {
-    moduleId: mod._id,
-    type: "tf",
-    text: "Equity was created to contradict the common law.",
-    choices: ["True", "False"],
-    correctIndex: 1,
-    points: 1,
-  },
-  {
-    moduleId: mod._id,
-    type: "mcq",
-    text: "Which maxim underlies laches?",
-    choices: [
-      "Equity regards as done that which ought to be done",
-      "He who comes into equity must come with clean hands",
-      "Equity aids the vigilant, not those who slumber on their rights",
-      "Equality is equity",
-    ],
-    correctIndex: 2,
-    points: 1,
-  },
-]);
-console.log("✅ Seeded Part 1");
-process.exit(0);
+/**
+ * Seed only STRUCTURAL data (Modules, defaults, etc.).
+ * Do NOT seed question banks here — use src/utils/import-questions.ts instead.
+ *
+ * Run:
+ *   npx tsx api/src/seed.ts
+ */
+async function seedModules() {
+  const modules: Array<Partial<IModule> & { slug: string; title: string }> = [
+    {
+      slug: "equity-foundations",
+      title: "Equity Foundations",
+      // Assessment defaults
+      questionCount: 10,
+      passPct: 70,
+    },
+
+    // Keep/extend your existing module(s) here.
+    // If your Module model supports these extra fields (order/readingLinks/etc.),
+    // you can include them as well.
+    {
+      slug: "01-foundations",
+      title: "Foundations of Equity",
+      questionCount: 10,
+      passPct: 70,
+      // If your Module schema includes these fields, uncomment and populate:
+      // order: 1,
+      // readingLinks: [
+      //   "/lectures/01-foundations/index.html",
+      //   "https://github.com/.../A-Collection-Of-Legal-Maxims-In-Law-And-Equity-1880_ocred.pdf",
+      // ],
+    },
+  ];
+
+  for (const m of modules) {
+    await Module.findOneAndUpdate(
+      { slug: m.slug },
+      {
+        // Only set on insert to keep seed idempotent and avoid overwriting edits.
+        $setOnInsert: m,
+      },
+      { upsert: true, new: true }
+    );
+
+    console.log(`✔ Module ensured: ${m.slug}`);
+  }
+}
+
+async function run() {
+  await connectDB(process.env.MONGODB_URI!);
+  console.log("✅ MongoDB connected");
+
+  await seedModules();
+
+  await mongoose.disconnect();
+  console.log("🌱 Seeding complete");
+  process.exit(0);
+}
+
+run().catch((err) => {
+  console.error("❌ Seed failed:", err);
+  process.exit(1);
+});
