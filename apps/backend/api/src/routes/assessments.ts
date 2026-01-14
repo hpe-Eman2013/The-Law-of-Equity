@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Module from "../models/Module.js";
 import Question from "../models/Question.js";
 import Attempt from "../models/Attempt.js";
-import { requireAuth } from "../utils/auth.js";
+import { requireAuth } from "../utils/requireAuth.js";
 
 const r = Router();
 
@@ -16,6 +16,7 @@ r.post("/:slug/attempts/start", requireAuth, async (req: any, res) => {
   if (!mod) return res.status(404).json({ ok: false, error: "Module not found" });
 
   const userId = req.user._id;
+  if (!userId) return res.status(401).json({ ok: false, error: "No user in request" });
 
   // Determine attemptNo = last + 1
   const last = await Attempt.findOne({ userId, moduleId: mod._id }).sort({ attemptNo: -1 }).lean();
@@ -58,7 +59,8 @@ r.post("/:slug/attempts/start", requireAuth, async (req: any, res) => {
       _id: q._id,
       type: q.type,
       text: q.text,
-      choices: q.type === "tf" && (!q.choices || q.choices.length === 0) ? ["True", "False"] : q.choices,
+      choices:
+        q.type === "tf" && (!q.choices || q.choices.length === 0) ? ["True", "False"] : q.choices,
       points: q.points ?? 1,
     })),
   });
@@ -77,7 +79,8 @@ r.post("/:slug/attempts/:attemptId/submit", requireAuth, async (req: any, res) =
 
   const attempt = await Attempt.findOne({ _id: attemptId, userId, moduleId: mod._id });
   if (!attempt) return res.status(404).json({ ok: false, error: "Attempt not found" });
-  if (attempt.locked) return res.status(400).json({ ok: false, error: "Attempt already submitted" });
+  if (attempt.locked)
+    return res.status(400).json({ ok: false, error: "Attempt already submitted" });
 
   const answers = Array.isArray(req.body?.answers) ? req.body.answers : [];
   // answers: [{ qid, choiceIndex }]
@@ -120,7 +123,10 @@ r.post("/:slug/attempts/:attemptId/submit", requireAuth, async (req: any, res) =
   const passPct = mod.passPct ?? 70;
   const passed = pct >= passPct;
 
-  attempt.answers = Array.from(answerMap.entries()).map(([qid, choiceIndex]) => ({ qid, choiceIndex }));
+  attempt.answers = Array.from(answerMap.entries()).map(([qid, choiceIndex]) => ({
+    qid,
+    choiceIndex,
+  }));
   attempt.score = score;
   attempt.maxScore = maxScore;
   attempt.pct = pct;
