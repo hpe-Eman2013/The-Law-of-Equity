@@ -12,6 +12,7 @@ export interface IQuestion {
   active: boolean;
   tags?: string[];
   difficulty?: number; // 1-5 optional
+  explanation?: string;
 }
 
 const QuestionSchema = new Schema<IQuestion>(
@@ -25,6 +26,7 @@ const QuestionSchema = new Schema<IQuestion>(
     active: { type: Boolean, default: true, index: true },
     tags: { type: [String], default: [] },
     difficulty: { type: Number },
+    explanation: { type: String },
   },
   { timestamps: true }
 );
