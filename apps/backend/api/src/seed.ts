@@ -1,4 +1,4 @@
-﻿import { connectDB } from "./db.js";
+﻿import { connectDB } from "./utils/db.js";
 import Module from "./models/Module.js";
 import Question from "./models/Question.js";
 import dotenv from "dotenv";

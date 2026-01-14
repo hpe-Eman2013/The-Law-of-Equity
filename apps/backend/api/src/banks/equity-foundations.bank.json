@@ -1,0 +1,372 @@
+[
+  {
+    "type": "mcq",
+    "text": "Which statement best distinguishes an equitable remedy from a legal remedy?",
+    "choices": [
+      "Equitable remedies always involve money damages.",
+      "Equitable remedies are discretionary and often involve orders compelling or preventing conduct.",
+      "Equitable remedies apply only to criminal cases.",
+      "Equitable remedies are automatic once liability is proven."
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["remedies", "foundations"],
+    "difficulty": 1,
+    "explanation": "Equitable remedies (e.g., injunction, specific performance) are typically discretionary and focus on conduct or property rather than compensatory damages."
+  },
+  {
+    "type": "tf",
+    "text": "Equity will not suffer a wrong to be without a remedy is commonly treated as an equity maxim expressing remedial flexibility.",
+    "choices": ["True", "False"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["maxims", "foundations"],
+    "difficulty": 1,
+    "explanation": "This maxim captures equity’s historical role in providing relief where common-law remedies were inadequate."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is most commonly a prerequisite for specific performance of a contract?",
+    "choices": [
+      "The plaintiff proves punitive damages are available.",
+      "The legal remedy (money damages) is inadequate.",
+      "The defendant acted negligently.",
+      "The contract concerns only personal services."
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["specific-performance", "remedies"],
+    "difficulty": 2,
+    "explanation": "Specific performance is usually considered when damages are inadequate (e.g., unique property)."
+  },
+  {
+    "type": "mcq",
+    "text": "Which doctrine most directly bars relief when a plaintiff unreasonably delays and the delay prejudices the defendant?",
+    "choices": ["Unclean hands", "Laches", "Estoppel", "Consideration"],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["defenses", "laches"],
+    "difficulty": 2,
+    "explanation": "Laches is an equitable time-delay defense requiring unreasonable delay plus prejudice."
+  },
+  {
+    "type": "mcq",
+    "text": "The maxim 'He who comes into equity must come with clean hands' most directly concerns:",
+    "choices": [
+      "The court’s subject-matter jurisdiction",
+      "The plaintiff’s own misconduct related to the matter in dispute",
+      "The defendant’s criminal history",
+      "The statute of limitations in all cases"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["defenses", "unclean-hands"],
+    "difficulty": 2,
+    "explanation": "Unclean hands focuses on the claimant’s inequitable conduct connected to the claim."
+  },
+  {
+    "type": "tf",
+    "text": "Equitable relief is generally considered a matter of right once breach is proven.",
+    "choices": ["True", "False"],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["remedies", "discretion"],
+    "difficulty": 1,
+    "explanation": "Equitable remedies are typically discretionary; courts weigh factors like adequacy of damages and fairness."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is the best description of an injunction?",
+    "choices": [
+      "A monetary award meant to compensate loss",
+      "A court order requiring a party to do or refrain from doing specific acts",
+      "A criminal penalty imposed by the state",
+      "A contract term set by the parties"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["injunctions", "remedies"],
+    "difficulty": 1,
+    "explanation": "Injunctions are equitable orders regulating conduct."
+  },
+  {
+    "type": "mcq",
+    "text": "A constructive trust is most often used to:",
+    "choices": [
+      "Punish a defendant with jail time",
+      "Treat property held by the defendant as held for the benefit of another to prevent unjust enrichment",
+      "Terminate a valid express trust automatically",
+      "Award only expectation damages"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["constructive-trust", "unjust-enrichment"],
+    "difficulty": 3,
+    "explanation": "Constructive trusts are imposed to prevent unjust enrichment where retention of property would be inequitable."
+  },
+  {
+    "type": "mcq",
+    "text": "Which equitable concept is most closely associated with 'fairness in priority' where a purchaser without notice may take free of certain equitable interests?",
+    "choices": [
+      "Bona fide purchaser (BFP) without notice",
+      "Promissory estoppel",
+      "Laches",
+      "Res judicata"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["notice", "priority"],
+    "difficulty": 3,
+    "explanation": "Equity often protects a bona fide purchaser for value without notice against prior equitable claims."
+  },
+  {
+    "type": "tf",
+    "text": "Equity follows the law means equity will always override statutes if the result seems unfair.",
+    "choices": ["True", "False"],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["maxims", "foundations"],
+    "difficulty": 2,
+    "explanation": "The maxim typically means equity respects legal rules and statutes; it does not give a license to ignore them."
+  },
+  {
+    "type": "mcq",
+    "text": "Promissory estoppel is most commonly used to enforce a promise when:",
+    "choices": [
+      "There is a signed deed under seal",
+      "There is no reliance by the promisee",
+      "The promisee reasonably relied to their detriment and injustice can be avoided only by enforcement",
+      "The promise involves criminal liability"
+    ],
+    "correctIndex": 2,
+    "points": 1,
+    "tags": ["estoppel", "reliance"],
+    "difficulty": 2,
+    "explanation": "Promissory estoppel generally requires promise, reasonable reliance, detriment, and injustice absent enforcement."
+  },
+  {
+    "type": "mcq",
+    "text": "Which remedy is most closely associated with undoing a transaction and restoring the parties to their pre-transaction positions?",
+    "choices": ["Rescission", "Specific performance", "Injunction", "Replevin"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["rescission", "remedies"],
+    "difficulty": 2,
+    "explanation": "Rescission aims to unwind the deal and restore the status quo ante."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is most accurate about equitable accounting?",
+    "choices": [
+      "It is always available in any breach of contract case.",
+      "It is typically used where the defendant holds money/property under fiduciary or similarly special circumstances and records are complex.",
+      "It is a criminal procedure.",
+      "It replaces all damages claims."
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["accounting", "fiduciary"],
+    "difficulty": 3,
+    "explanation": "Accounting is a classic equitable tool when ordinary legal discovery/damages are inadequate due to complexity or duty."
+  },
+  {
+    "type": "tf",
+    "text": "A fiduciary generally must avoid conflicts of interest and self-dealing unless properly authorized.",
+    "choices": ["True", "False"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["fiduciary", "duties"],
+    "difficulty": 2,
+    "explanation": "Core fiduciary obligations include loyalty and avoidance of unauthorized conflicts/self-dealing."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is a typical element courts consider when granting an injunction?",
+    "choices": [
+      "Whether the plaintiff has an adequate remedy at law",
+      "Whether the plaintiff can prove a felony",
+      "Whether the defendant signed a notarized confession",
+      "Whether the plaintiff is seeking punitive damages"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["injunctions", "standards"],
+    "difficulty": 2,
+    "explanation": "Equity usually requires inadequacy of legal remedies and considers balance of hardships and public interest (depending on jurisdiction)."
+  },
+  {
+    "type": "mcq",
+    "text": "Rectification (reformation) is most associated with:",
+    "choices": [
+      "Changing a written instrument to reflect the parties’ true agreement after a mistake",
+      "Canceling a contract because it is inconvenient",
+      "Awarding damages for pain and suffering",
+      "Punishing fraud with incarceration"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["reformation", "mistake"],
+    "difficulty": 3,
+    "explanation": "Reformation corrects the writing where it fails to express the intended agreement due to mistake (often mutual) or certain fraud scenarios."
+  },
+  {
+    "type": "tf",
+    "text": "Unjust enrichment is always a tort claim and can never be equitable in nature.",
+    "choices": ["True", "False"],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["unjust-enrichment", "foundations"],
+    "difficulty": 2,
+    "explanation": "Unjust enrichment is often restitutionary and historically connected to equity; it is not limited to tort."
+  },
+  {
+    "type": "mcq",
+    "text": "Tracing in equity is most closely related to:",
+    "choices": [
+      "Following misappropriated property into its substitutes to claim an equitable interest",
+      "Determining criminal intent",
+      "Calculating tax penalties",
+      "Confirming a witness identity"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["tracing", "remedies"],
+    "difficulty": 4,
+    "explanation": "Tracing allows a claimant to identify and claim value in substituted or mixed assets under certain conditions."
+  },
+  {
+    "type": "mcq",
+    "text": "Which maxim most directly supports the idea that similarly situated parties should be treated consistently?",
+    "choices": [
+      "Equity delights in doing justice and not by halves",
+      "Equity is equality",
+      "Equity imputes an intent to fulfill an obligation",
+      "Equity acts in personam"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["maxims", "equality"],
+    "difficulty": 2,
+    "explanation": "‘Equity is equality’ captures the equitable preference for fair, proportionate outcomes in certain contexts."
+  },
+  {
+    "type": "tf",
+    "text": "Equity acts in personam means equitable decrees traditionally operate by compelling parties, not by directly transferring title by court power alone.",
+    "choices": ["True", "False"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["maxims", "in-personam"],
+    "difficulty": 3,
+    "explanation": "Historically, equity enforced orders against persons (contempt), though modern systems can affect property directly as well."
+  },
+  {
+    "type": "mcq",
+    "text": "Which defense most directly involves a representation and reliance that makes it unfair to let the representor deny the truth of the representation?",
+    "choices": ["Estoppel", "Laches", "Unclean hands", "Duress"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["estoppel", "reliance"],
+    "difficulty": 2,
+    "explanation": "Estoppel prevents a party from contradicting a position where another relied and would suffer unfairness."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is most likely to be considered 'unique' such that damages may be inadequate and specific performance may be considered?",
+    "choices": [
+      "Standardized goods readily available in the market",
+      "A parcel of real property",
+      "Routine office supplies",
+      "Publicly traded shares of a highly liquid company"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["specific-performance", "uniqueness"],
+    "difficulty": 2,
+    "explanation": "Real property is commonly treated as unique for specific performance analysis."
+  },
+  {
+    "type": "tf",
+    "text": "Laches is identical to a statute of limitations and requires no showing of prejudice.",
+    "choices": ["True", "False"],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["laches", "defenses"],
+    "difficulty": 3,
+    "explanation": "Laches is an equitable doctrine; prejudice is typically required and it is not strictly identical to a statutory limitations period."
+  },
+  {
+    "type": "mcq",
+    "text": "Which equitable remedy most directly targets preventing future harm rather than compensating past harm?",
+    "choices": ["Injunction", "Restitution", "Rescission", "Reformation"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["injunctions", "remedies"],
+    "difficulty": 1,
+    "explanation": "Injunctions are forward-looking, designed to prevent or compel conduct to avoid harm."
+  },
+  {
+    "type": "mcq",
+    "text": "An equitable lien is best described as:",
+    "choices": [
+      "A criminal penalty attached to property",
+      "A court-recognized security interest in specific property to secure an obligation, often to prevent unjust enrichment",
+      "A statutory tax lien only",
+      "A transfer of title by deed"
+    ],
+    "correctIndex": 1,
+    "points": 1,
+    "tags": ["equitable-lien", "remedies"],
+    "difficulty": 4,
+    "explanation": "Equitable liens can arise by operation of equity to secure repayment or prevent unjust enrichment regarding particular property."
+  },
+  {
+    "type": "tf",
+    "text": "Equity will generally refuse to enforce a contract for personal services through specific performance.",
+    "choices": ["True", "False"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["specific-performance", "limits"],
+    "difficulty": 3,
+    "explanation": "Courts often decline to compel personal services (practical supervision issues and involuntary servitude concerns)."
+  },
+  {
+    "type": "mcq",
+    "text": "Which is the best description of 'balance of hardships' in injunctive relief analysis?",
+    "choices": [
+      "Comparing the hardship to the plaintiff if relief is denied versus hardship to the defendant if relief is granted",
+      "Comparing plaintiff’s legal fees to defendant’s legal fees",
+      "Comparing criminal sentences for similar conduct",
+      "Comparing tax liabilities of the parties"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["injunctions", "standards"],
+    "difficulty": 2,
+    "explanation": "Courts often weigh relative hardship when deciding whether an injunction is equitable."
+  },
+  {
+    "type": "mcq",
+    "text": "Which maxim is most closely tied to the idea that equity may treat as done what ought to be done?",
+    "choices": [
+      "Equity regards as done that which ought to be done",
+      "Equity will not aid a volunteer",
+      "Equity follows the law",
+      "Equity is equality"
+    ],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["maxims", "conversion"],
+    "difficulty": 3,
+    "explanation": "This maxim underpins doctrines such as equitable conversion and certain constructive outcomes where obligations exist."
+  },
+  {
+    "type": "tf",
+    "text": "Equity will not aid a volunteer generally means equity may deny relief to someone who has not provided value/consideration in certain contexts.",
+    "choices": ["True", "False"],
+    "correctIndex": 0,
+    "points": 1,
+    "tags": ["maxims", "volunteer"],
+    "difficulty": 3,
+    "explanation": "The volunteer maxim is often relevant where a claimant seeks equitable assistance without having given value or having proper standing."
+  }
+]
