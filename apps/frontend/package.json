@@ -18,6 +18,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "^5.9.3",
-    "@equity/shared": "file:../../shared"
+    "@equity/shared": "^0.0.1"
   }
 }
