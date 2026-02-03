@@ -40,6 +40,32 @@ export type AttemptDTO = Timestamped & {
   startedAt: ISODateString;
   submittedAt?: ISODateString;
 };
+export type AttemptFeedbackDTO = {
+  qid: Id;
+  chosenIndex: number | null;
+  correct: boolean;
+  pointsEarned: number;
+  pointsPossible: number;
+};
+
+export type StartAttemptResponseDTO = {
+  attemptId: Id;
+  attemptNo: number;
+  passPct: number;
+  questions: ServedQuestionDTO[];
+};
+
+export type SubmitAttemptResponseDTO = {
+  attemptId: Id;
+  attemptNo: number;
+  score: number;
+  maxScore: number;
+  pct: number;
+  passPct: number;
+  passed: boolean;
+  feedback: AttemptFeedbackDTO[];
+  next: { canProceed: boolean };
+};
 
 export type StartAttemptInput = {
   moduleId: Id;
@@ -48,4 +74,29 @@ export type StartAttemptInput = {
 export type SubmitAttemptInput = {
   attemptId: Id;
   answers: AttemptAnswerDTO[];
+};
+export type ModuleDTO = Timestamped & {
+  id: Id;
+  slug: string;
+  title: string;
+  order: number;
+  passPct: number;
+  questionCount: number;
+};
+/**
+ * Question shape that is SAFE to send to the client.
+ * No correctIndex included.
+ */
+export type ServedQuestionDTO = {
+  id: string;
+  type: QuestionType;
+  text: string;
+  choices: string[];
+  points: number;
+};
+export type ModuleListDTO = ModuleDTO[];
+
+export type ModuleWithQuestionsDTO = {
+  module: ModuleDTO;
+  questions: ServedQuestionDTO[]; // reuse the ServedQuestionDTO from assessments start
 };
