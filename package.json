@@ -3,7 +3,6 @@
   "private": true,
   "workspaces": [
     "apps/backend",
-    "apps/backend/api",
     "apps/frontend",
     "shared"
   ],
