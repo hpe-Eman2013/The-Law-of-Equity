@@ -1,0 +1,16 @@
+{
+  "name": "the-law-of-equity",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/backend/api",
+    "apps/frontend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "npm --prefix apps/backend/api run dev",
+    "dev:backend": "npm --prefix apps/backend run dev",
+    "dev:frontend": "npm --prefix apps/frontend run dev",
+    "build": "npm run build -w @equity/shared && npm run build -w backend && npm run build -w frontend"
+  }
+}
