@@ -25,7 +25,8 @@
     "express": "^5.1.0",
     "googleapis": "^164.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.2"
+    "mongoose": "^8.19.2",
+    "@equity/shared": "workspace:"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
