@@ -20,12 +20,19 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Library Debug</h1>
-      <p>Status: {status}</p>
-      <p>Count: {count}</p>
+    <div className="container py-4">
+      <h1 className="mb-3">Library Debug</h1>
 
-      <hr style={{ margin: "24px 0" }} />
+      <div className="mb-4">
+        <p className="mb-1">
+          <strong>Status:</strong> {status}
+        </p>
+        <p className="mb-0">
+          <strong>Count:</strong> {count}
+        </p>
+      </div>
+
+      <hr />
 
       <ModulesList />
     </div>
