@@ -11,8 +11,8 @@ import type {
 
 const r = Router();
 
-function err(message: string) {
-  return { ok: false, error: { message } } as const;
+function err(message: string, code?: string) {
+  return { ok: false, error: { message, code } } as const;
 }
 
 function toISO(d: any): string {
@@ -33,50 +33,57 @@ function mapModule(m: any): ModuleDTO {
 }
 
 function mapServedQuestion(q: any): ServedQuestionDTO {
+  const rawChoices = Array.isArray(q.choices) ? q.choices : [];
+  const choices =
+    q.type === "tf" && rawChoices.length === 0 ? ["True", "False"] : rawChoices;
+
   return {
     id: String(q._id),
     type: q.type,
     text: q.text,
-    choices:
-      q.type === "tf" && (!q.choices || q.choices.length === 0)
-        ? ["True", "False"]
-        : q.choices,
+    choices,
     points: q.points ?? 1,
   };
 }
 
 /**
  * GET /api/modules
- * Returns modules in order as DTOs.
  */
 r.get("/", async (_req, res) => {
-  const mods = await Module.find().sort({ order: 1 }).lean();
-
-  const data = mods.map(mapModule);
-  const payload: ApiResponse<ModuleDTO[]> = { ok: true, data };
-  return res.json(payload);
+  try {
+    const mods = await Module.find().sort({ order: 1 }).lean();
+    const data = mods.map(mapModule);
+    const payload: ApiResponse<ModuleDTO[]> = { ok: true, data };
+    return res.json(payload);
+  } catch (e: any) {
+    return res.status(500).json(err("Failed to load modules", "modules_load_failed"));
+  }
 });
 
 /**
  * GET /api/modules/:slug/questions
- * Returns module + safe questions (no correctIndex).
  */
 r.get("/:slug/questions", async (req, res) => {
-  const mod = await Module.findOne({ slug: req.params.slug }).lean();
-  if (!mod) return res.status(404).json(err("Module not found"));
+  try {
+    const mod = await Module.findOne({ slug: req.params.slug }).lean();
+    if (!mod) return res.status(404).json(err("Module not found"));
 
-  // IMPORTANT: exclude correctIndex defensively
-  const qs = await Question.find({ moduleId: mod._id, active: true })
-    .select({ correctIndex: 0 })
-    .lean();
+    // If your Question schema has `active`, keep the filter.
+    // If not, remove `active: true`.
+    const qs = await Question.find({ moduleId: mod._id /*, active: true*/ })
+      .select({ correctIndex: 0 })
+      .lean();
 
-  const data: ModuleWithQuestionsDTO = {
-    module: mapModule(mod),
-    questions: qs.map(mapServedQuestion),
-  };
+    const data: ModuleWithQuestionsDTO = {
+      module: mapModule(mod),
+      questions: qs.map(mapServedQuestion),
+    };
 
-  const payload: ApiResponse<ModuleWithQuestionsDTO> = { ok: true, data };
-  return res.json(payload);
+    const payload: ApiResponse<ModuleWithQuestionsDTO> = { ok: true, data };
+    return res.json(payload);
+  } catch (e: any) {
+    return res.status(500).json(err("Failed to load module questions", "module_questions_failed"));
+  }
 });
 
 export default r;

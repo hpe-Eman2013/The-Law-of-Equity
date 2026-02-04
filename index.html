@@ -2,22 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Law of Equity — Modules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Law of Equity</title>
   </head>
   <body>
-    <h1>Law of Equity — Modules</h1>
-    <ul id="mods">
-      <li>Loading…</li>
-    </ul>
-    <script>
-      const API = import.meta.env.VITE_API_BASE;
-      fetch(API + "/modules").then(r=>r.json()).then(mods=>{
-        document.getElementById("mods").innerHTML =
-          mods.map(m=>`<li>${m.order}. ${m.title} — <code>${m.slug}</code></li>`).join("");
-      }).catch(err=>{
-        document.getElementById("mods").innerHTML = "Failed to load modules: " + err;
-      });
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
