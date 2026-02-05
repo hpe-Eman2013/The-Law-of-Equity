@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
+
 import SponsorProfile from "../models/SponsorProfile";
 import SponsorshipGrant from "../models/SponsorshipGrant";
 import SponsoredEnrollment from "../models/SponsoredEnrollment";
+
 import { requireAdmin } from "../middleware/requireAdmin";
 import { HttpError } from "../utils/errors";
+import toObjectId from "../utils/objectId.js";
 
 const router = Router();
 
@@ -21,7 +24,7 @@ router.post("/sponsors", requireAdmin, async (req, res, next) => {
     }
 
     const doc = await SponsorProfile.create({
-      ownerUserId: ownerUserId ? new Types.ObjectId(ownerUserId) : null,
+      ownerUserId: ownerUserId ? toObjectId(ownerUserId, "ownerUserId") : null,
       name,
       type,
       contactEmail,
@@ -46,8 +49,8 @@ router.post("/grants", requireAdmin, async (req, res, next) => {
     }
 
     const grant = await SponsorshipGrant.create({
-      sponsorProfileId: new Types.ObjectId(sponsorProfileId),
-      courseId: new Types.ObjectId(courseId),
+      sponsorProfileId: toObjectId(sponsorProfileId, "sponsorProfileId"),
+      courseId: toObjectId(courseId, "courseId"),
       seatsPurchased: Number(seatsPurchased),
       seatsUsed: 0,
       status: "active",
@@ -63,77 +66,113 @@ router.post("/grants", requireAdmin, async (req, res, next) => {
 /**
  * POST /api/sponsorships/grants/:grantId/assign
  * Assign a sponsored seat to a user (creates SponsoredEnrollment and increments seatsUsed)
+ *
+ * Strict seats (transaction-safe):
+ * - fails if no seats remaining
+ * - fails if user already has a SponsoredEnrollment for the course
+ * - increments seatsUsed atomically
  */
-router.post("/grants/:grantId/assign", requireAdmin, async (req, res, next) => {
+router.post<{ grantId: string }>("/grants/:grantId/assign", requireAdmin, async (req, res, next) => {
+  const session = await mongoose.startSession();
+
   try {
     const { grantId } = req.params;
     const { userId } = req.body ?? {};
 
     if (!userId) throw new HttpError(400, "userId is required.");
 
-    const grant = await SponsorshipGrant.findById(grantId);
-    if (!grant) throw new HttpError(404, "Grant not found.");
+    const grantObjectId = toObjectId(grantId, "grantId");
+    const userObjectId = toObjectId(userId, "userId");
 
-    if (grant.status !== "active") throw new HttpError(400, "Grant is not active.");
-    if (grant.expiresAt && grant.expiresAt.getTime() < Date.now()) throw new HttpError(400, "Grant expired.");
+    let createdEnrollment: any = null;
+    let updatedGrant: any = null;
 
-    if (grant.seatsUsed >= grant.seatsPurchased) {
-      throw new HttpError(400, "No seats available on this grant.");
-    }
+    await session.withTransaction(async () => {
+      const grant = await SponsorshipGrant.findById(grantObjectId).session(session);
+      if (!grant) throw new HttpError(404, "Grant not found.");
 
-    // Prevent duplicate enrollment
-    const existing = await SponsoredEnrollment.findOne({
-      userId: new Types.ObjectId(userId),
-      courseId: grant.courseId,
+      if (grant.status !== "active") throw new HttpError(400, "Grant is not active.");
+      if (grant.expiresAt && grant.expiresAt.getTime() < Date.now()) throw new HttpError(400, "Grant expired.");
+
+      if (grant.seatsUsed >= grant.seatsPurchased) {
+        throw new HttpError(400, "No seats available on this grant.");
+      }
+
+      // Prevent duplicate sponsored enrollment (one per user/course)
+      const existing = await SponsoredEnrollment.findOne({
+        userId: userObjectId,
+        courseId: grant.courseId,
+      }).session(session);
+
+      if (existing) throw new HttpError(409, "User already has a sponsored enrollment for this course.");
+
+      const docs = await SponsoredEnrollment.create(
+        [
+          {
+            userId: userObjectId,
+            courseId: grant.courseId,
+            grantId: grant._id,
+            status: "active",
+            assignedAt: new Date(),
+          },
+        ],
+        { session }
+      );
+
+      grant.seatsUsed += 1;
+      await grant.save({ session });
+
+      createdEnrollment = docs[0];
+      updatedGrant = grant;
     });
 
-    if (existing) throw new HttpError(409, "User already has a sponsored enrollment for this course.");
-
-    // Transaction-like behavior (simple v1 approach)
-    const enrollment = await SponsoredEnrollment.create({
-      userId: new Types.ObjectId(userId),
-      courseId: grant.courseId,
-      grantId: grant._id,
-      status: "active",
-      assignedAt: new Date(),
-    });
-
-    grant.seatsUsed += 1;
-    await grant.save();
-
-    res.status(201).json({ sponsoredEnrollment: enrollment, grant });
+    res.status(201).json({ sponsoredEnrollment: createdEnrollment, grant: updatedGrant });
   } catch (err) {
     next(err);
+  } finally {
+    session.endSession();
   }
 });
 
 /**
  * POST /api/sponsorships/enrollments/:id/revoke
+ * Revocation frees a seat (recommended policy)
  */
-router.post("/enrollments/:id/revoke", requireAdmin, async (req, res, next) => {
+router.post<{ id: string }>("/enrollments/:id/revoke", requireAdmin, async (req, res, next) => {
+  const session = await mongoose.startSession();
+
   try {
     const { id } = req.params;
+    const enrollmentId = toObjectId(id, "id");
 
-    const enr = await SponsoredEnrollment.findById(id);
-    if (!enr) throw new HttpError(404, "Sponsored enrollment not found.");
+    let revokedEnrollment: any = null;
+    let grantAfter: any = null;
 
-    if (enr.status !== "active") throw new HttpError(400, "Enrollment is not active.");
+    await session.withTransaction(async () => {
+      const enr = await SponsoredEnrollment.findById(enrollmentId).session(session);
+      if (!enr) throw new HttpError(404, "Sponsored enrollment not found.");
 
-    enr.status = "revoked";
-    enr.revokedAt = new Date();
-    await enr.save();
+      if (enr.status !== "active") throw new HttpError(400, "Enrollment is not active.");
 
-    // Optional: decrement seatsUsed (policy choice)
-    // v1 recommendation: DO decrement seatsUsed so seat can be reassigned.
-    const grant = await SponsorshipGrant.findById(enr.grantId);
-    if (grant && grant.seatsUsed > 0) {
-      grant.seatsUsed -= 1;
-      await grant.save();
-    }
+      enr.status = "revoked";
+      enr.revokedAt = new Date();
+      await enr.save({ session });
 
-    res.json({ sponsoredEnrollment: enr, grant });
+      const grant = await SponsorshipGrant.findById(enr.grantId).session(session);
+      if (grant && grant.seatsUsed > 0) {
+        grant.seatsUsed -= 1;
+        await grant.save({ session });
+      }
+
+      revokedEnrollment = enr;
+      grantAfter = grant;
+    });
+
+    res.json({ sponsoredEnrollment: revokedEnrollment, grant: grantAfter });
   } catch (err) {
     next(err);
+  } finally {
+    session.endSession();
   }
 });
 

@@ -7,6 +7,8 @@ import modules from "./routes/modules.js";
 import attempts from "./routes/attempts.js";
 import libraryRoute from "./routes/library.js";
 import assessments from "./routes/assessments.js"
+import sponsorships from "./routes/sponsorships.js";
+
 
 dotenv.config();
 const app = express();
@@ -28,6 +30,8 @@ app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
 app.use("/api", libraryRoute);
 app.use("/api/assessments", assessments);
+app.use("/api/sponsorships", sponsorships);
+
 
 const port:number = Number(process.env.PORT) || 3000;
 connectDB(process.env.MONGODB_URI!)
