@@ -1,40 +1,78 @@
-import { useEffect, useState } from "react";
-import ModulesList from "./ModulesList";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./layout/Layout";
+import { AuthProvider } from "./auth/AuthContext";
+import RequireAuth from "./layout/RequireAuth";
+import RequireOnboardingClear from "./layout/RequireOnboardingClear";
+
+import Intro from "./pages/Intro";
+import Overview from "./pages/Overview";
+import Pricing from "./pages/Pricing";
+import Login from "./pages/Login";
+import ModulesPage from "./pages/ModulesPage";
+
+import Terms from "./pages/legal/Terms";
+import Privacy from "./pages/legal/Privacy";
+import Refunds from "./pages/legal/Refunds";
+import Disclaimer from "./pages/legal/Disclaimer";
+
+import VerifySponsorship from "./pages/onboarding/VerifySponsorship";
+import ResetPassword from "./pages/onboarding/ResetPassword";
 
 export default function App() {
-  const [status, setStatus] = useState("loading");
-  const [count, setCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch("/api/library")
-      .then((res) => res.json())
-      .then((json) => {
-        setStatus("loaded");
-        setCount(json.count);
-        console.log("API result:", json);
-      })
-      .catch((err) => {
-        setStatus("error");
-        console.error("Fetch error:", err);
-      });
-  }, []);
-
   return (
-    <div className="container py-4">
-      <h1 className="mb-3">Library Debug</h1>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            {/* Public */}
+            <Route path="/" element={<Intro />} />
+            <Route path="/overview" element={<Overview />} />
+            <Route path="/pricing" element={<Pricing />} />
 
-      <div className="mb-4">
-        <p className="mb-1">
-          <strong>Status:</strong> {status}
-        </p>
-        <p className="mb-0">
-          <strong>Count:</strong> {count}
-        </p>
-      </div>
+            {/* Legal */}
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/refunds" element={<Refunds />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
 
-      <hr />
+            {/* Auth */}
+            <Route path="/login" element={<Login />} />
 
-      <ModulesList />
-    </div>
+            {/* Onboarding (must be logged in) */}
+            <Route
+              path="/onboarding/verify-sponsorship"
+              element={
+                <RequireAuth>
+                  <VerifySponsorship />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/onboarding/reset-password"
+              element={
+                <RequireAuth>
+                  <ResetPassword />
+                </RequireAuth>
+              }
+            />
+
+            {/* App (must be logged in AND onboarding cleared) */}
+            <Route
+              path="/modules"
+              element={
+                <RequireAuth>
+                  <RequireOnboardingClear>
+                    <ModulesPage />
+                  </RequireOnboardingClear>
+                </RequireAuth>
+              }
+            />
+
+            {/* Default */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
