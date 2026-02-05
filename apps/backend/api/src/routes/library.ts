@@ -1,8 +1,14 @@
 import { Router, Request, Response } from "express";
 import { google, drive_v3 } from "googleapis";
 import { getServiceAccountJSON, requireEnv } from "../utils/env.js";
+import type { Readable } from "stream";
+import type { GaxiosResponse } from "gaxios";
 
 const r = Router();
+function requireSingleString(value: unknown, fieldName: string): string {
+  if (typeof value === "string") return value;
+  throw new Error(`${fieldName} must be a single string value.`);
+}
 
 // --- in-memory cache
 const TTL = Number(process.env.LIBRARY_CACHE_TTL_MS || 5 * 60 * 1000);
@@ -35,17 +41,17 @@ async function listPdfsByFolder(folderId: string): Promise<LibraryDoc[]> {
   let pageToken: string | undefined = undefined;
   const files: drive_v3.Schema$File[] = [];
 
- do {
-  const res = await drive.files.list({
-    q,
-    fields,
-    pageSize: 1000,
-    pageToken,
-    orderBy: "name_natural",
-  });
-  const data = res.data as drive_v3.Schema$FileList; // <— type only data
-  files.push(...(data.files ?? []));
-  pageToken = data.nextPageToken ?? undefined;
+  do {
+    const res = await drive.files.list({
+      q,
+      fields,
+      pageSize: 1000,
+      pageToken,
+      orderBy: "name_natural",
+    });
+    const data = res.data as drive_v3.Schema$FileList; // <— type only data
+    files.push(...(data.files ?? []));
+    pageToken = data.nextPageToken ?? undefined;
   } while (pageToken);
 
   return (files as drive_v3.Schema$File[]).map((f) => ({
@@ -66,7 +72,7 @@ r.get("/library", async (req: Request, res: Response) => {
       return res.json(cache.payload);
     }
     const folderId = requireEnv("DRIVE_FOLDER_ID");
-    console.log("Using DRIVE_FOLDER_ID =", folderId); 
+    console.log("Using DRIVE_FOLDER_ID =", folderId);
     const docs = await listPdfsByFolder(folderId);
     const payload = {
       ok: true,
@@ -86,14 +92,16 @@ r.get("/library", async (req: Request, res: Response) => {
 r.get("/library/:id/download", async (req: Request, res: Response) => {
   try {
     // TODO: add your auth check if needed
-    const id = req.params.id;
     const drive = await driveClient();
-    const resp = await drive.files.get(
+    // Example: if you currently do something like: const { id } = req.query;
+    const id = requireSingleString(req.query.id, "id"); // OR req.params.id depending on your route
+
+    const resp = (await drive.files.get(
       { fileId: id, alt: "media" },
-      { responseType: "stream" }
-    );
-    res.setHeader("Content-Type", "application/pdf");
-    (resp.data as NodeJS.ReadableStream).pipe(res);
+      { responseType: "stream" },
+    )) as unknown as GaxiosResponse<Readable>;
+
+    resp.data.pipe(res);
   } catch (e: any) {
     res.status(500).json({ ok: false, error: String(e.message || e) });
   }
