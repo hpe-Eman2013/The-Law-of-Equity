@@ -6,9 +6,9 @@ import auth from "./routes/auth.js";
 import modules from "./routes/modules.js";
 import attempts from "./routes/attempts.js";
 import libraryRoute from "./routes/library.js";
-import assessments from "./routes/assessments.js"
+import assessments from "./routes/assessments.js";
 import sponsorships from "./routes/sponsorships.js";
-
+import { requireAuth } from "./middleware/requireAuth";
 
 dotenv.config();
 const app = express();
@@ -24,16 +24,16 @@ app.get("/api/ping", (_req, res) => {
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/health", (_req,res)=>res.json({ ok:true }));
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", auth);
 app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
 app.use("/api", libraryRoute);
 app.use("/api/assessments", assessments);
 app.use("/api/sponsorships", sponsorships);
+app.use("/api/sponsorships", requireAuth, sponsorships);
 
-
-const port:number = Number(process.env.PORT) || 3000;
+const port: number = Number(process.env.PORT) || 3000;
 connectDB(process.env.MONGODB_URI!)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("⚠️ MongoDB connection failed:", err))
