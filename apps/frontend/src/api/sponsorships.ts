@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "./http";
 
 export type GrantStatusResponse = {
   grant: {
@@ -28,21 +28,21 @@ export type Enrollment = {
 };
 
 export async function getGrantStatus(grantId: string) {
-  const { data } = await axios.get<GrantStatusResponse>(
+  const { data } = await http.get<GrantStatusResponse>(
     `/api/sponsorships/grants/${grantId}/status`,
   );
   return data;
 }
 
 export async function getGrantEnrollments(grantId: string) {
-  const { data } = await axios.get<{ enrollments: Enrollment[] }>(
+  const { data } = await http.get<{ enrollments: Enrollment[] }>(
     `/api/sponsorships/grants/${grantId}/enrollments`,
   );
   return data.enrollments;
 }
 
 export async function assignSeat(grantId: string, userId: string) {
-  const { data } = await axios.post(
+  const { data } = await http.post(
     `/api/sponsorships/grants/${grantId}/assign`,
     { userId },
   );
@@ -53,7 +53,7 @@ export async function assignSeat(grantId: string, userId: string) {
 }
 
 export async function revokeEnrollment(enrollmentId: string) {
-  const { data } = await axios.post(
+  const { data } = await http.post(
     `/api/sponsorships/enrollments/${enrollmentId}/revoke`,
   );
   return data as {
