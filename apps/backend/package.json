@@ -12,7 +12,9 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "format": "prettier -w .",
-    "format:check": "prettier -c ."
+    "format:check": "prettier -c .",
+    "start:api": "npm --prefix apps/backend/api run start",
+    "start:web": "npm --prefix apps/frontend run preview"
   },
   "keywords": [],
   "author": "",

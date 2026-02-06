@@ -3,11 +3,12 @@ import { google, drive_v3 } from "googleapis";
 import { getServiceAccountJSON, requireEnv } from "../utils/env.js";
 import type { Readable } from "stream";
 import type { GaxiosResponse } from "gaxios";
+import { HttpError } from "../utils/errors";
 
 const r = Router();
 function requireSingleString(value: unknown, fieldName: string): string {
   if (typeof value === "string") return value;
-  throw new Error(`${fieldName} must be a single string value.`);
+  throw new HttpError(400, `${fieldName} must be a single string value.`);
 }
 
 // --- in-memory cache
