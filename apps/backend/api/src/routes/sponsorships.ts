@@ -1,5 +1,5 @@
 import { Router } from "express";
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
 import SponsorProfile from "../models/SponsorProfile.js";
 import SponsorshipGrant from "../models/SponsorshipGrant.js";
