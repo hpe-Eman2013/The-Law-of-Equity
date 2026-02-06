@@ -1,10 +1,15 @@
 ﻿import jwt from "jsonwebtoken";
-const secret = process.env.JWT_SECRET!;
-if (!secret) throw new Error("JWT_SECRET is not set");
+
+function getSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET is not set");
+  return secret;
+}
 
 export function signToken(payload: object) {
-  return jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "12h" });
+  return jwt.sign(payload, getSecret(), { expiresIn: "12h" });
 }
-export function verifyToken<T = any>(token: string) {
-  return jwt.verify(token, secret) as T;
+
+export function verifyToken(token: string) {
+  return jwt.verify(token, getSecret());
 }
