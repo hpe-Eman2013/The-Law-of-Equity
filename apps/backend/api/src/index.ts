@@ -12,6 +12,9 @@ import { requireAuth } from "./middleware/requireAuth";
 
 dotenv.config();
 const app = express();
+app.get("/api/whoami", requireAuth, (req, res) => {
+  res.json({ user: (req as any).user });
+});
 // Simple logger – this will tell us if requests even hit Express
 app.use((req, _res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
@@ -25,12 +28,18 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.get("/api/whoami2", requireAuth, (req, res) => {
+  res.json({
+    reqUser: (req as any).user,
+    directReqUser: (req as any).user, // same at runtime, but useful sanity
+  });
+});
+
 app.use("/api/auth", auth);
 app.use("/api/modules", modules);
 app.use("/api/attempts", attempts);
 app.use("/api", libraryRoute);
 app.use("/api/assessments", assessments);
-app.use("/api/sponsorships", sponsorships);
 app.use("/api/sponsorships", requireAuth, sponsorships);
 
 const port: number = Number(process.env.PORT) || 3000;

@@ -6,7 +6,7 @@ import { verifyToken } from "../utils/jwt.js";
 export async function requireAuth(req: Request, _res: Response, next: NextFunction) {
   try {
     const header = req.headers.authorization;
-    if (!header || !header.startsWith("Bearer ")) {
+    if (!header?.startsWith("Bearer ")) {
       return next(new HttpError(401, "Not authenticated."));
     }
 
@@ -16,16 +16,16 @@ export async function requireAuth(req: Request, _res: Response, next: NextFuncti
     const user = await User.findById(payload.uid).lean();
     if (!user) return next(new HttpError(401, "Not authenticated."));
 
-    // Attach what requireAdmin expects
+    // ✅ attach to req.user (what requireAdmin reads)
     (req as any).user = {
       _id: user._id,
       email: user.email,
-      isAdmin: user.role === "admin",
       role: user.role,
+      isAdmin: user.role === "admin",
     };
 
-    next();
-  } catch (err) {
-    next(new HttpError(401, "Not authenticated."));
+    return next();
+  } catch {
+    return next(new HttpError(401, "Not authenticated."));
   }
 }
