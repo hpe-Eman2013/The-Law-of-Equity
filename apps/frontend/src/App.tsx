@@ -17,6 +17,7 @@ import Disclaimer from "./pages/legal/Disclaimer";
 
 import VerifySponsorship from "./pages/onboarding/VerifySponsorship";
 import ResetPassword from "./pages/onboarding/ResetPassword";
+import RequireGuest from "./layout/RequireGuest";
 
 export default function App() {
   return (
@@ -36,7 +37,14 @@ export default function App() {
             <Route path="/disclaimer" element={<Disclaimer />} />
 
             {/* Auth */}
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={
+                <RequireGuest>
+                  <Login />
+                </RequireGuest>
+              }
+            />
 
             {/* Onboarding (must be logged in) */}
             <Route

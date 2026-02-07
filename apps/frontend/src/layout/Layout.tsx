@@ -57,9 +57,13 @@ export default function Layout() {
               ) : (
                 <>
                   <span className="text-light small">
-                    Signed in as <strong>{user.username}</strong>
+                    Signed in as{" "}
+                    <strong>{user.name ?? user.email ?? user.id}</strong>
                   </span>
-                  <button className="btn btn-outline-light btn-sm" onClick={logout}>
+                  <button
+                    className="btn btn-outline-light btn-sm"
+                    onClick={logout}
+                  >
                     Logout
                   </button>
                 </>

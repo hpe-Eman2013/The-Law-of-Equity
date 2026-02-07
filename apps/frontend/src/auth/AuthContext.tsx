@@ -1,4 +1,5 @@
 import React from "react";
+import http from "../api/http"; // <-- adjust path if needed
 
 export type OnboardingState = {
   needsSponsorshipCode?: boolean;
@@ -7,9 +8,9 @@ export type OnboardingState = {
 
 export type AuthUser = {
   id: string;
-  username: string;
-  fullName?: string;
   email?: string;
+  name?: string;
+  role?: string;
   onboarding?: OnboardingState;
 };
 
@@ -19,15 +20,13 @@ type AuthContextValue = {
   status: AuthStatus;
   user: AuthUser | null;
   refresh: () => Promise<void>;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
-const AuthContext = React.createContext<AuthContextValue | undefined>(undefined);
-
-function isNotFoundOrUnauthorized(status: number) {
-  return status === 401 || status === 403 || status === 404;
-}
+const AuthContext = React.createContext<AuthContextValue | undefined>(
+  undefined,
+);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = React.useState<AuthStatus>("loading");
@@ -35,24 +34,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refresh = React.useCallback(async () => {
     try {
-      const res = await fetch("/api/auth/me", { credentials: "include" });
+      const token = localStorage.getItem("token");
+      const stored = localStorage.getItem("profile");
 
-      if (isNotFoundOrUnauthorized(res.status)) {
+      if (!token || !stored) {
         setUser(null);
-        setStatus("ready");
         return;
       }
 
-      const json = await res.json();
-      // Expecting: { ok:true, data:{ user } } or { ok:false,... }
-      if (json?.ok && json.data?.user) {
-        setUser(json.data.user as AuthUser);
-      } else {
-        setUser(null);
-      }
-    } catch {
-      // If backend isn't up, don't block UI
-      setUser(null);
+      setUser(JSON.parse(stored));
     } finally {
       setStatus("ready");
     }
@@ -62,31 +52,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refresh();
   }, [refresh]);
 
-  const login = React.useCallback(async (username: string, password: string) => {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ username, password }),
-    });
+  const login = React.useCallback(async (email: string, password: string) => {
+    const { data } = await http.post("/auth/login", { email, password });
 
-    const json = await res.json().catch(() => null);
-    if (!res.ok || !json?.ok) {
-      const msg = json?.error?.message ?? `${res.status} ${res.statusText}`;
-      throw new Error(msg);
+    if (!data?.ok) {
+      throw new Error(data?.error ?? "Login failed.");
     }
 
-    // Prefer server returning the user payload
-    if (json.data?.user) setUser(json.data.user as AuthUser);
-    else await refresh();
-  }, [refresh]);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("profile", JSON.stringify(data.profile));
+
+    setUser(data.profile as AuthUser);
+    setStatus("ready");
+  }, []);
 
   const logout = React.useCallback(async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-    } finally {
-      setUser(null);
-    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("profile");
+    setUser(null);
   }, []);
 
   const value: AuthContextValue = { status, user, refresh, login, logout };

@@ -1,72 +1,91 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../auth/useAuth";
+import { useAuthContext } from "../auth/AuthContext";
 
 export default function Login() {
-  const { login, user } = useAuth();
-  const nav = useNavigate();
-  const loc = useLocation() as any;
+  const { login, user, status } = useAuthContext();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    if (user) nav("/modules", { replace: true });
-  }, [user, nav]);
+  // If already logged in, leave the login page
+  useEffect(() => {
+    if (status === "ready" && user) {
+      const from = (location.state as any)?.from?.pathname ?? "/";
+      navigate(from, { replace: true });
+    }
+  }, [status, user, navigate, location.state]);
 
-  const from = loc.state?.from ?? "/modules";
-
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: any) {
     e.preventDefault();
-    setError("");
+    setError(null);
+
     try {
-      await login(username, password);
-      nav(from, { replace: true });
-    } catch (e: any) {
-      setError(e?.message ?? String(e));
+      await login(email, password);
+
+      // Redirect after login (fallback if effect timing differs)
+      const from = (location.state as any)?.from?.pathname ?? "/";
+      navigate(from, { replace: true });
+    } catch (err: any) {
+      setError(err.message || "Login failed");
     }
   }
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-6 col-lg-5">
-        <h1 className="mb-3">Login</h1>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-5 col-lg-4">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h4 className="card-title mb-4 text-center">Sign In</h4>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+              <form onSubmit={onSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="login-email" className="form-label">
+                    Email
+                  </label>
+                  <input
+                    id="login-email"
+                    type="email"
+                    className="form-control"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
 
-        <form onSubmit={onSubmit} className="card">
-          <div className="card-body">
-            <label className="form-label" htmlFor="login-username">
-              Username
-            </label>
-            <input
-              id="login-username"
-              className="form-control mb-3"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-              required
-            />
+                <div className="mb-3">
+                  <label htmlFor="login-password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    id="login-password"
+                    type="password"
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
 
-            <label className="form-label" htmlFor="login-password">
-              Password
-            </label>
-            <input
-              id="login-password"
-              type="password"
-              className="form-control mb-3"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-            />
+                {error && (
+                  <div className="alert alert-danger py-2">{error}</div>
+                )}
 
-            <button className="btn btn-dark w-100" type="submit">
-              Sign in
-            </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  disabled={status === "loading"}
+                >
+                  {status === "loading" ? "Signing in…" : "Sign In"}
+                </button>
+              </form>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
